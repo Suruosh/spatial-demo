@@ -1,0 +1,8 @@
+{
+  "name": "xr-commerce-onefile",
+  "description": "A web-based 3D spatial UI mirroring an XR scene using glassmorphism and CSS 3D transforms.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
