@@ -47,6 +47,19 @@
     -ms-overflow-style: none;
     scrollbar-width: none;
   }
+
+  .animate-floaty {
+    animation: floaty 4s ease-in-out infinite;
+  }
+}
+
+@keyframes floaty {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
 }
 
 body {

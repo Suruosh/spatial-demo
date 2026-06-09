@@ -1,7 +1,11 @@
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import App from './App.tsx';
+import { initTheatreStudio } from './lib/theatre/project';
 import './index.css';
+
+// Theatre.js Studio editor — development only (no-op in production builds).
+void initTheatreStudio();
 
 const originalWarn = console.warn;
 console.warn = (...args) => {
