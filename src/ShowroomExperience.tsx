@@ -14,11 +14,15 @@ import { useLenis } from './hooks/useLenis';
 
 interface ShowroomExperienceProps {
   onNavigate?: (page: string) => void;
+  isInformationOpen?: boolean;
 }
 
 // Composition root: the showroom world (3D) with the spatial UI overlaid.
 // Providers (theme + experience) live above this in <App>.
-export function ShowroomExperience({ onNavigate }: ShowroomExperienceProps) {
+export function ShowroomExperience({
+  onNavigate,
+  isInformationOpen = false,
+}: ShowroomExperienceProps) {
   const { isDark } = useTheme();
   const { state } = useExperience();
   const [isMobile, setIsMobile] = useState(false);
@@ -85,7 +89,13 @@ export function ShowroomExperience({ onNavigate }: ShowroomExperienceProps) {
           <TopBar />
           <div className="flex-1 w-full max-w-7xl mx-auto px-4 lg:p-12 flex flex-col lg:flex-row justify-between lg:items-center pt-[65vh] pb-30 lg:pt-0 lg:pb-0 pointer-events-none">
             <Sidebar onNavigate={onNavigate} />
-            <ContentPanel />
+            <div
+              className={`transition-opacity duration-300 ${
+                isInformationOpen ? 'opacity-0 pointer-events-none' : 'opacity-100'
+              }`}
+            >
+              <ContentPanel />
+            </div>
           </div>
         </div>
       </div>

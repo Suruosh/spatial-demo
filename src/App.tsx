@@ -17,7 +17,10 @@ export default function App() {
   return (
     <ThemeProvider>
       <ExperienceProvider>
-        <ShowroomExperience onNavigate={handleNavigate} />
+        <ShowroomExperience
+          onNavigate={handleNavigate}
+          isInformationOpen={isInformationOpen}
+        />
         <InformationModal
           isOpen={isInformationOpen}
           onClose={() => setIsInformationOpen(false)}

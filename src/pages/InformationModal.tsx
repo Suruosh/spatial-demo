@@ -12,7 +12,7 @@ export function InformationModal({ isOpen, onClose }: InformationModalProps) {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center pointer-events-none">
+    <div className="fixed inset-0 z-50 flex items-center justify-end pointer-events-none lg:justify-center">
       {/* Backdrop */}
       <div
         className="absolute inset-0 bg-black/40 pointer-events-auto"
@@ -21,7 +21,7 @@ export function InformationModal({ isOpen, onClose }: InformationModalProps) {
 
       {/* Modal */}
       <div
-        className={`relative z-50 w-full max-w-md mx-4 rounded-4xl backdrop-blur-lg pointer-events-auto max-h-[80vh] overflow-y-auto ${
+        className={`relative z-50 w-full lg:max-w-md mx-4 lg:mx-auto rounded-4xl backdrop-blur-lg pointer-events-auto max-h-[80vh] overflow-y-auto ${
           isDark
             ? 'bg-gray-900/80 border border-white/10'
             : 'bg-white/80 border border-black/10'
