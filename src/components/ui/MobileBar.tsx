@@ -1,5 +1,6 @@
 import { Home, Info, LayoutGrid, Mail, Moon, Sun } from 'lucide-react';
 import { useTheme } from '../../lib/theme/ThemeProvider';
+import { useContentView } from '../../lib/ContentContext';
 import { scrollShowroomToTop } from '../../lib/scroll';
 
 interface MobileBarProps {
@@ -9,6 +10,7 @@ interface MobileBarProps {
 // Mobile bottom navigation bar.
 export function MobileBar({ onNavigate }: MobileBarProps) {
   const { isDark, toggle } = useTheme();
+  const { view, setView } = useContentView();
 
   return (
     <div className="lg:hidden absolute bottom-6 left-6 right-6 z-50 glass-panel rounded-4xl h-18 flex items-center px-4 pointer-events-auto shadow-2xl">
@@ -29,7 +31,16 @@ export function MobileBar({ onNavigate }: MobileBarProps) {
         >
           <Info className="w-5 h-5" />
         </button>
-        <button type="button" aria-label="Collections" className="w-11 h-11 rounded-full flex items-center justify-center text-gray-900/70 hover:text-gray-900 hover:bg-black/5 dark:text-white/70 dark:hover:text-white dark:hover:bg-white/10 transition-all">
+        <button
+          type="button"
+          aria-label="Collections"
+          onClick={() => setView(view === 'catalog' ? 'welcome' : 'catalog')}
+          className={`w-11 h-11 rounded-full flex items-center justify-center transition-all ${
+            view === 'catalog'
+              ? 'bg-white shadow-sm dark:bg-white/20 text-gray-900 dark:text-white'
+              : 'text-gray-900/70 hover:text-gray-900 hover:bg-black/5 dark:text-white/70 dark:hover:text-white dark:hover:bg-white/10'
+          }`}
+        >
           <LayoutGrid className="w-5 h-5" />
         </button>
         <button type="button" aria-label="Messages" className="w-11 h-11 rounded-full flex items-center justify-center text-gray-900/70 hover:text-gray-900 hover:bg-black/5 dark:text-white/70 dark:hover:text-white dark:hover:bg-white/10 transition-all">
