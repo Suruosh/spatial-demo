@@ -1,3 +1,4 @@
+import { useTheme } from '../lib/theme/ThemeProvider';
 import { InformationPanel } from './InformationPanel';
 
 interface InformationModalProps {
@@ -6,10 +7,12 @@ interface InformationModalProps {
 }
 
 export function InformationModal({ isOpen, onClose }: InformationModalProps) {
+  const { isDark } = useTheme();
+
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 pointer-events-none">
+    <div className={`fixed inset-0 z-50 pointer-events-none ${isDark ? 'dark' : ''}`}>
       <div className="absolute inset-0 bg-black/40 pointer-events-auto" onClick={onClose} />
 
       <div className="absolute inset-0 z-10 w-full h-full overflow-y-auto lg:overflow-hidden overflow-x-hidden pointer-events-none">
@@ -19,6 +22,7 @@ export function InformationModal({ isOpen, onClose }: InformationModalProps) {
             <InformationPanel
               onAction={onClose}
               actionLabel="Close"
+              textTone={isDark ? 'light' : 'default'}
               className="max-h-[80vh] lg:max-h-none overflow-y-auto"
             />
           </div>
