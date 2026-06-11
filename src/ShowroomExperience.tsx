@@ -59,38 +59,38 @@ export function ShowroomExperience() {
         }`}
       />
 
-      <MobileBar />
+      <ContentProvider>
+        <MobileBar />
 
-      {/* The world */}
-      <div className="absolute inset-0 z-0">
-        <WebGLErrorBoundary>
-          <ShowroomScene isMobile={isMobile} tourActive={tourActive} />
-        </WebGLErrorBoundary>
-      </div>
+        {/* The world */}
+        <div className="absolute inset-0 z-0">
+          <WebGLErrorBoundary>
+            <ShowroomScene isMobile={isMobile} tourActive={tourActive} />
+          </WebGLErrorBoundary>
+        </div>
 
-      {/* Guided-tour playback (controls the Theatre sheet; camera applied in-scene) */}
-      <TourController active={tourActive} />
+        {/* Guided-tour playback (controls the Theatre sheet; camera applied in-scene) */}
+        <TourController active={tourActive} />
 
-      {/* Music Control */}
-      <MusicControl />
+        {/* Music Control */}
+        <MusicControl />
 
-      {/* Spatial UI surface — tilts with pointer parallax, scrolls with Lenis */}
-      <div
-        ref={parallax.targetRef}
-        id="scroll-container"
-        className="absolute inset-0 z-10 w-full h-full overflow-y-auto lg:overflow-hidden overflow-x-hidden no-scrollbar pointer-events-none"
-        style={{ transformStyle: 'preserve-3d' }}
-      >
-        <div ref={contentRef} className="min-h-[100dvh] w-full flex flex-col">
-          <TopBar />
-          <ContentProvider>
+        {/* Spatial UI surface — tilts with pointer parallax, scrolls with Lenis */}
+        <div
+          ref={parallax.targetRef}
+          id="scroll-container"
+          className="absolute inset-0 z-10 w-full h-full overflow-y-auto lg:overflow-hidden overflow-x-hidden no-scrollbar pointer-events-none"
+          style={{ transformStyle: 'preserve-3d' }}
+        >
+          <div ref={contentRef} className="min-h-[100dvh] w-full flex flex-col">
+            <TopBar />
             <div className="flex-1 w-full max-w-7xl mx-auto px-4 lg:p-12 flex flex-col lg:flex-row justify-between lg:items-center pt-[65vh] pb-[120px] lg:pt-0 lg:pb-0 pointer-events-none">
               <Sidebar />
               <ContentPanel />
             </div>
-          </ContentProvider>
+          </div>
         </div>
-      </div>
+      </ContentProvider>
     </div>
   );
 }

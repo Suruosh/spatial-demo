@@ -1,6 +1,6 @@
-import { createContext, useContext, useState, ReactNode } from 'react';
+import { createContext, useContext, useState, type ReactNode } from 'react';
 
-type ContentView = 'welcome' | 'team';
+type ContentView = 'welcome' | 'team' | 'catalog';
 
 interface ContentContextType {
   view: ContentView;
