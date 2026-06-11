@@ -5,9 +5,11 @@ import { TopBar } from './components/ui/TopBar';
 import { Sidebar } from './components/ui/Sidebar';
 import { MobileBar } from './components/ui/MobileBar';
 import { ContentPanel } from './components/ui/ContentPanel';
+import { MusicControl } from './components/ui/MusicControl';
 import { TourController } from './features/tour/TourController';
 import { useTheme } from './lib/theme/ThemeProvider';
 import { ExperienceState, useExperience } from './lib/experience';
+import { ContentProvider } from './lib/ContentContext';
 import { usePointerParallax } from './hooks/usePointerParallax';
 import { useLenis } from './hooks/useLenis';
 
@@ -69,6 +71,9 @@ export function ShowroomExperience() {
       {/* Guided-tour playback (controls the Theatre sheet; camera applied in-scene) */}
       <TourController active={tourActive} />
 
+      {/* Music Control */}
+      <MusicControl />
+
       {/* Spatial UI surface — tilts with pointer parallax, scrolls with Lenis */}
       <div
         ref={parallax.targetRef}
@@ -78,10 +83,12 @@ export function ShowroomExperience() {
       >
         <div ref={contentRef} className="min-h-[100dvh] w-full flex flex-col">
           <TopBar />
-          <div className="flex-1 w-full max-w-7xl mx-auto px-4 lg:p-12 flex flex-col lg:flex-row justify-between lg:items-center pt-[65vh] pb-[120px] lg:pt-0 lg:pb-0 pointer-events-none">
-            <Sidebar />
-            <ContentPanel />
-          </div>
+          <ContentProvider>
+            <div className="flex-1 w-full max-w-7xl mx-auto px-4 lg:p-12 flex flex-col lg:flex-row justify-between lg:items-center pt-[65vh] pb-[120px] lg:pt-0 lg:pb-0 pointer-events-none">
+              <Sidebar />
+              <ContentPanel />
+            </div>
+          </ContentProvider>
         </div>
       </div>
     </div>
