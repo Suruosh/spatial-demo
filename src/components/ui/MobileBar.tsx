@@ -3,13 +3,17 @@ import { useTheme } from '../../lib/theme/ThemeProvider';
 import { useContentView } from '../../lib/ContentContext';
 import { scrollShowroomToTop } from '../../lib/scroll';
 
+interface MobileBarProps {
+  onNavigate?: (page: string) => void;
+}
+
 // Mobile bottom navigation bar.
-export function MobileBar() {
+export function MobileBar({ onNavigate }: MobileBarProps) {
   const { isDark, toggle } = useTheme();
   const { view, setView } = useContentView();
 
   return (
-    <div className="lg:hidden absolute bottom-6 left-6 right-6 z-50 glass-panel rounded-[32px] h-[72px] flex items-center px-4 pointer-events-auto shadow-2xl">
+    <div className="lg:hidden absolute bottom-6 left-6 right-6 z-50 glass-panel rounded-4xl h-18 flex items-center px-4 pointer-events-auto shadow-2xl">
       <div className="flex items-center justify-between flex-1">
         <button
           type="button"
@@ -17,10 +21,15 @@ export function MobileBar() {
           onClick={scrollShowroomToTop}
           className="w-11 h-11 rounded-full flex items-center justify-center bg-white shadow-sm dark:bg-white/20 text-gray-900 dark:text-white transition-all"
         >
-          <Home className="w-[20px] h-[20px]" />
+          <Home className="w-5 h-5" />
         </button>
-        <button type="button" aria-label="Info" className="w-11 h-11 rounded-full flex items-center justify-center text-gray-900/70 hover:text-gray-900 hover:bg-black/5 dark:text-white/70 dark:hover:text-white dark:hover:bg-white/10 transition-all">
-          <Info className="w-[20px] h-[20px]" />
+        <button
+          type="button"
+          aria-label="Info"
+          onClick={() => onNavigate?.('information')}
+          className="w-11 h-11 rounded-full flex items-center justify-center text-gray-900/70 hover:text-gray-900 hover:bg-black/5 dark:text-white/70 dark:hover:text-white dark:hover:bg-white/10 transition-all"
+        >
+          <Info className="w-5 h-5" />
         </button>
         <button
           type="button"
@@ -32,10 +41,10 @@ export function MobileBar() {
               : 'text-gray-900/70 hover:text-gray-900 hover:bg-black/5 dark:text-white/70 dark:hover:text-white dark:hover:bg-white/10'
           }`}
         >
-          <LayoutGrid className="w-[20px] h-[20px]" />
+          <LayoutGrid className="w-5 h-5" />
         </button>
         <button type="button" aria-label="Messages" className="w-11 h-11 rounded-full flex items-center justify-center text-gray-900/70 hover:text-gray-900 hover:bg-black/5 dark:text-white/70 dark:hover:text-white dark:hover:bg-white/10 transition-all">
-          <Mail className="w-[20px] h-[20px]" />
+          <Mail className="w-5 h-5" />
         </button>
         <button
           type="button"
@@ -43,7 +52,7 @@ export function MobileBar() {
           onClick={toggle}
           className="w-11 h-11 rounded-full flex items-center justify-center text-gray-900/70 hover:text-gray-900 hover:bg-black/5 dark:text-white/70 dark:hover:text-white dark:hover:bg-white/10 transition-all"
         >
-          {isDark ? <Moon className="w-[20px] h-[20px]" /> : <Sun className="w-[20px] h-[20px]" />}
+          {isDark ? <Moon className="w-5 h-5" /> : <Sun className="w-5 h-5" />}
         </button>
       </div>
     </div>

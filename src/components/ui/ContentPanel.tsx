@@ -12,7 +12,7 @@ export function ContentPanel() {
   const { view, setView } = useContentView();
 
   return (
-    <div className="w-full lg:w-[400px] glass-panel rounded-[32px] p-6 lg:p-8 flex flex-col shadow-2xl relative overflow-hidden pointer-events-auto">
+    <div className="w-full lg:w-100 glass-panel rounded-4xl p-6 lg:p-8 flex flex-col shadow-2xl relative overflow-hidden pointer-events-auto">
       {(view === 'welcome' || view === 'catalog') && (
         <div className={`flex flex-col flex-1 ${view === 'catalog' ? 'hidden lg:flex' : ''}`}>
           <div className="flex flex-col items-start mb-6 gap-2">
