@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { CartProvider } from './features/commerce';
 import { ThemeProvider } from './lib/theme/ThemeProvider';
 import { ExperienceProvider } from './lib/experience';
 import { ShowroomExperience } from './ShowroomExperience';
@@ -17,14 +18,16 @@ export default function App() {
   return (
     <ThemeProvider>
       <ExperienceProvider>
-        <ShowroomExperience
-          onNavigate={handleNavigate}
-          isInformationOpen={isInformationOpen}
-        />
-        <InformationModal
-          isOpen={isInformationOpen}
-          onClose={() => setIsInformationOpen(false)}
-        />
+        <CartProvider>
+          <ShowroomExperience
+            onNavigate={handleNavigate}
+            isInformationOpen={isInformationOpen}
+          />
+          <InformationModal
+            isOpen={isInformationOpen}
+            onClose={() => setIsInformationOpen(false)}
+          />
+        </CartProvider>
       </ExperienceProvider>
     </ThemeProvider>
   );

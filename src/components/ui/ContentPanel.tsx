@@ -4,6 +4,9 @@ import { useContentView } from '../../lib/ContentContext';
 import { Button3D } from './ThreeDButton';
 import { TeamMembers } from './TeamMembers';
 import { ProductCatalog } from './ProductCatalog';
+import { ProductPanel } from './ProductPanel';
+import { CartPanel } from './CartPanel';
+import { CheckoutPanel } from './CheckoutPanel';
 
 // The primary information surface. The world stays primary; this panel is
 // secondary and updates based on navigation, selection, and tour stops.
@@ -11,10 +14,12 @@ export function ContentPanel() {
   const { state, advance } = useExperience();
   const { view, setView } = useContentView();
 
+  const isCommerceView = view === 'product' || view === 'cart' || view === 'checkout';
+
   return (
-    <div className="w-full lg:w-100 glass-panel rounded-4xl p-6 lg:p-8 flex flex-col shadow-2xl relative overflow-hidden pointer-events-auto">
-      {(view === 'welcome' || view === 'catalog') && (
-        <div className={`flex flex-col flex-1 ${view === 'catalog' ? 'hidden lg:flex' : ''}`}>
+    <div className="w-full lg:w-100 glass-panel rounded-4xl p-6 lg:p-8 flex flex-col shadow-2xl relative overflow-hidden pointer-events-auto min-h-[420px] lg:min-h-0">
+      {view === 'welcome' && (
+        <div className="flex flex-col flex-1">
           <div className="flex flex-col items-start mb-6 gap-2">
             <span className="text-[10px] uppercase tracking-[0.3em] text-gray-500 dark:text-white/40">
               {EXPERIENCE_LABELS[state]}
@@ -54,7 +59,7 @@ export function ContentPanel() {
       {view === 'catalog' && (
         <div className="flex lg:hidden flex-col flex-1 min-h-0">
           <ProductCatalog />
-          <div className="mt-6 pt-6 border-t border-gray-400 dark:border-white/10">
+          <div className="mt-6 pt-6 border-t border-gray-400 dark:border-white/10 shrink-0">
             <Button3D type="button" onClick={() => setView('welcome')} className="w-full rounded-2xl">
               Back to Welcome
             </Button3D>
@@ -62,7 +67,7 @@ export function ContentPanel() {
         </div>
       )}
 
-      {view === 'team' ? (
+      {view === 'team' && (
         <>
           <TeamMembers />
           <div className="mt-6 pt-6 border-t border-gray-400 dark:border-white/10">
@@ -71,7 +76,15 @@ export function ContentPanel() {
             </Button3D>
           </div>
         </>
-      ) : null}
+      )}
+
+      {isCommerceView && (
+        <>
+          {view === 'product' && <ProductPanel />}
+          {view === 'cart' && <CartPanel />}
+          {view === 'checkout' && <CheckoutPanel />}
+        </>
+      )}
     </div>
   );
 }

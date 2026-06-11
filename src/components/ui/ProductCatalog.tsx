@@ -1,10 +1,9 @@
 import { PRODUCTS } from '../../data/products';
-
-function formatPrice(price: number) {
-  return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(price);
-}
+import { formatPrice, useCommerceNav } from '../../features/commerce';
 
 export function ProductCatalog() {
+  const { focusProduct } = useCommerceNav();
+
   return (
     <div className="w-full h-full flex flex-col p-6">
       <div className="flex flex-col items-start mb-6 gap-2 shrink-0">
@@ -17,6 +16,7 @@ export function ProductCatalog() {
           <button
             key={product.id}
             type="button"
+            onClick={() => focusProduct(product.id)}
             className="w-full p-3 rounded-2xl flex items-center gap-3 text-left bg-white/30 dark:bg-white/5 backdrop-blur-sm border border-white/40 dark:border-white/10 hover:bg-white/40 dark:hover:bg-white/10 transition-all"
           >
             <div
