@@ -5,17 +5,18 @@ import { TopBar } from './components/ui/TopBar';
 import { Sidebar } from './components/ui/Sidebar';
 import { MobileBar } from './components/ui/MobileBar';
 import { ContentPanel } from './components/ui/ContentPanel';
-import { TourController } from './features/tour/TourController';
 import { useTheme } from './lib/theme/ThemeProvider';
-import { ExperienceState, useExperience } from './lib/experience';
+import { useExperience } from './lib/experience';
+import { STATE_CONFIG } from './lib/experience/stateConfig';
 import { usePointerParallax } from './hooks/usePointerParallax';
 import { useLenis } from './hooks/useLenis';
+import { useScrollJourney } from './hooks/useScrollJourney';
 
 // Composition root: the showroom world (3D) with the spatial UI overlaid.
 // Providers (theme + experience) live above this in <App>.
 export function ShowroomExperience() {
   const { isDark } = useTheme();
-  const { state } = useExperience();
+  const { state, setState } = useExperience();
   const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
@@ -27,9 +28,14 @@ export function ShowroomExperience() {
 
   const parallax = usePointerParallax(!isMobile);
   const contentRef = useRef<HTMLDivElement>(null);
-  useLenis(parallax.targetRef, contentRef);
+  const lenis = useLenis(parallax.targetRef, contentRef);
 
-  const tourActive = state === ExperienceState.GuidedTour;
+  // Per-state behavior (camera authority, scroll journey, UI reveal).
+  const behavior = STATE_CONFIG[state];
+
+  // Scroll → cinematic journey: Lenis progress scrubs the Theatre playhead and
+  // flips the state bucket. Suspended in Explore / ProductFocus / Cart.
+  useScrollJourney(lenis, { enabled: behavior.scrollJourney, onState: setState });
 
   return (
     <div
@@ -62,25 +68,27 @@ export function ShowroomExperience() {
       {/* The world */}
       <div className="absolute inset-0 z-0">
         <WebGLErrorBoundary>
-          <ShowroomScene isMobile={isMobile} tourActive={tourActive} />
+          <ShowroomScene isMobile={isMobile} cameraMode={behavior.cameraMode} />
         </WebGLErrorBoundary>
       </div>
 
-      {/* Guided-tour playback (controls the Theatre sheet; camera applied in-scene) */}
-      <TourController active={tourActive} />
-
-      {/* Spatial UI surface — tilts with pointer parallax, scrolls with Lenis */}
+      {/* Spatial UI surface — tilts with pointer parallax, scrolls with Lenis.
+          The tall inner track gives the cinematic journey its scroll length on
+          all viewports; the UI is pinned (sticky) over it so it stays attached to
+          space while scrolling scrubs the Theatre camera (see useScrollJourney). */}
       <div
         ref={parallax.targetRef}
         id="scroll-container"
-        className="absolute inset-0 z-10 w-full h-full overflow-y-auto lg:overflow-hidden overflow-x-hidden no-scrollbar pointer-events-none"
+        className="absolute inset-0 z-10 w-full h-full overflow-y-auto overflow-x-hidden no-scrollbar pointer-events-none"
         style={{ transformStyle: 'preserve-3d' }}
       >
-        <div ref={contentRef} className="min-h-[100dvh] w-full flex flex-col">
-          <TopBar />
-          <div className="flex-1 w-full max-w-7xl mx-auto px-4 lg:p-12 flex flex-col lg:flex-row justify-between lg:items-center pt-[65vh] pb-[120px] lg:pt-0 lg:pb-0 pointer-events-none">
-            <Sidebar />
-            <ContentPanel />
+        <div ref={contentRef} className="relative w-full" style={{ height: '400dvh' }}>
+          <div className="sticky top-0 h-[100dvh] w-full flex flex-col">
+            <TopBar />
+            <div className="flex-1 w-full max-w-7xl mx-auto px-4 lg:p-12 flex flex-col lg:flex-row justify-between lg:items-center pt-[65vh] pb-[120px] lg:pt-0 lg:pb-0 pointer-events-none">
+              <Sidebar />
+              <ContentPanel />
+            </div>
           </div>
         </div>
       </div>
