@@ -15,6 +15,7 @@ import { JOURNEY_STOPS } from './features/tour/tourStops';
 import { ScrollNavContext, type ScrollNav } from './lib/scrollNav';
 import { ProductSelectionContext, type ProductSelection } from './lib/productSelection';
 import { usePointerParallax } from './hooks/usePointerParallax';
+import { useLenis } from './hooks/useLenis';
 
 // The stop the pre-landing "Enter" glides to (UI reveal).
 const REVEAL_INDEX = Math.max(0, JOURNEY_STOPS.findIndex((s) => s.id === 'ui-reveal'));
@@ -37,6 +38,13 @@ export function ShowroomExperience() {
 
   const parallax = usePointerParallax(!isMobile);
   const controlsRef = useRef<CameraControlsImpl | null>(null);
+
+  // Lenis drives real page-scroll on the content layer (the panel moves with the
+  // scroll). It works even though the layer is pointer-events-none: wheel/touch
+  // over the panel bubbles to the wrapper → Lenis scrolls; wheel over the empty
+  // 3D area targets the canvas → CameraControls zooms. No internal panel scroll.
+  const contentRef = useRef<HTMLDivElement>(null);
+  useLenis(parallax.targetRef, contentRef);
 
   const [stopIndex, setStopIndex] = useState(0);
   const [revealed, setRevealed] = useState(false);
@@ -114,17 +122,15 @@ export function ShowroomExperience() {
           <MobileBar />
         </div>
 
-        {/* Spatial UI overlay — a scroll container (overall page scroll: the
-            content/panel moves with the scroll), but pointer-events-none so drags
-            on empty areas pass through to the 3D (orbit/zoom/pan + item click stay
-            live). Scrolling happens by wheel/swipe over the UI widgets, which are
-            pointer-events-auto and scroll this container. */}
+        {/* Spatial UI overlay — pointer-events-none so drags/zoom/taps pass through
+            to the 3D (orbit/zoom/pan + item click stay live). Lenis drives real
+            page-scroll here (the panel moves with the scroll); see useLenis above. */}
         <div
           ref={parallax.targetRef}
           className={`absolute inset-0 z-10 overflow-y-auto no-scrollbar pointer-events-none ${revealClass(revealed)}`}
           style={{ transformStyle: 'preserve-3d' }}
         >
-          <div className="min-h-full w-full flex flex-col">
+          <div ref={contentRef} className="min-h-full w-full flex flex-col">
             <TopBar />
             {/* 3D occupies the upper area on mobile; the panel sits below with
                 bottom room so the fixed MobileBar never covers it. */}
