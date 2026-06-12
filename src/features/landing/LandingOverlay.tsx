@@ -20,7 +20,7 @@ export function LandingOverlay({ onEnter }: LandingOverlayProps) {
         <p className="text-[0.7rem] lg:text-xs tracking-[0.45em] uppercase opacity-60">
           Spatial Commerce
         </p>
-        <h1 className="max-w-3xl text-4xl font-light leading-tight tracking-tight text-shadow-sm lg:text-7xl">
+        <h1 className="font-display max-w-3xl text-4xl font-light leading-tight tracking-tight text-shadow-sm lg:text-7xl">
           A showroom you move through
         </h1>
         <p className="max-w-md text-sm leading-relaxed opacity-60 lg:text-base">

@@ -55,7 +55,7 @@ export function ContentPanel() {
           <span className="text-[10px] uppercase tracking-[0.3em] text-gray-500 dark:text-white/40">
             {eyebrow}
           </span>
-          <h1 className="text-3xl font-black tracking-wide text-gray-900 dark:text-white">{title}</h1>
+          <h1 className="font-display text-3xl font-semibold tracking-tight text-gray-900 dark:text-white">{title}</h1>
         </div>
 
         <div className="py-2 text-gray-800 dark:text-white/80 text-sm font-light leading-relaxed">
@@ -87,7 +87,7 @@ export function ContentPanel() {
             </div>
             <div className="flex-1 min-w-0">
               <p className="text-[10px] uppercase tracking-[0.3em] text-gray-500 dark:text-white/40">Selected item</p>
-              <h3 className="text-lg font-black tracking-wide text-gray-900 dark:text-white truncate">{selectedProduct.name}</h3>
+              <h3 className="font-display text-lg font-semibold tracking-tight text-gray-900 dark:text-white truncate">{selectedProduct.name}</h3>
               <p className="text-sm text-gray-700 dark:text-white/70">${selectedProduct.price.toLocaleString()}</p>
             </div>
             <button
@@ -101,7 +101,7 @@ export function ContentPanel() {
           </div>
           <button
             type="button"
-            className="mt-4 w-full rounded-2xl bg-white text-black font-bold uppercase text-[11px] tracking-widest py-3 hover:scale-[1.02] active:scale-95 transition-transform shadow-lg"
+            className="mt-4 w-full rounded-full bg-white text-black font-semibold text-sm py-3.5 hover:scale-[1.02] active:scale-95 transition-transform shadow-lg"
           >
             Add to bag
           </button>

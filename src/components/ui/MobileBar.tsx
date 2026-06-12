@@ -1,6 +1,5 @@
 import { Home, Info, LayoutGrid, Mail, Moon, Sun } from 'lucide-react';
 import { useTheme } from '../../lib/theme/ThemeProvider';
-import { scrollShowroomToTop } from '../../lib/scroll';
 
 // Mobile bottom navigation bar.
 export function MobileBar() {
@@ -11,9 +10,9 @@ export function MobileBar() {
       <div className="flex items-center justify-between flex-1">
         <button
           type="button"
-          aria-label="Home"
-          onClick={scrollShowroomToTop}
-          className="w-11 h-11 rounded-full flex items-center justify-center bg-white shadow-sm dark:bg-white/20 text-gray-900 dark:text-white transition-all"
+          aria-label="Reload — back to start"
+          onClick={() => window.location.reload()}
+          className="glass-button w-11 h-11 rounded-full flex items-center justify-center text-gray-900 dark:text-white hover:scale-105 active:scale-95 transition-transform"
         >
           <Home className="w-[20px] h-[20px]" />
         </button>
