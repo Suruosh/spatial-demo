@@ -8,17 +8,24 @@
 }
 
 @layer utilities {
+  /* Frosted glass with an opaque backing so text stays readable over the live
+     3D (no scene-dimming needed). Top layer = the frost sheen; bottom layer =
+     the solid-ish base that provides contrast. */
   .glass-panel {
-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.4) 0%, rgba(255, 255, 255, 0.1) 100%);
+    background:
+      linear-gradient(135deg, rgba(255, 255, 255, 0.5) 0%, rgba(255, 255, 255, 0.25) 100%),
+      rgba(255, 255, 255, 0.62);
     backdrop-filter: blur(32px);
     -webkit-backdrop-filter: blur(32px);
-    border: 1px solid rgba(255, 255, 255, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.6);
     box-shadow: 0 30px 60px -12px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.4);
   }
   .dark .glass-panel {
-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0.05) 100%);
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    box-shadow: 0 30px 60px -12px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+    background:
+      linear-gradient(135deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0.04) 100%),
+      rgba(12, 13, 18, 0.58);
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    box-shadow: 0 30px 60px -12px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.22);
   }
 
   .glass-button {
@@ -51,6 +58,25 @@
   .animate-floaty {
     animation: floaty 4s ease-in-out infinite;
   }
+
+  /* Content-panel narrative cross-fade on journey-stop change (calm, brief). */
+  .animate-panel {
+    animation: panel-fade 0.5s ease-out;
+  }
+
+  /* Smoothly fades a layer in/out. Unlike Tailwind's `invisible`, the
+     visibility flip is DELAYED until the opacity fade finishes, so fade-out is
+     smooth (no instant pop) while still removing the layer from hit-testing. */
+  .fade-layer {
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 900ms ease, visibility 0s linear 900ms;
+  }
+  .fade-layer.is-shown {
+    opacity: 1;
+    visibility: visible;
+    transition: opacity 900ms ease, visibility 0s;
+  }
 }
 
 @keyframes floaty {
@@ -59,6 +85,24 @@
   }
   50% {
     transform: translateY(-10px);
+  }
+}
+
+@keyframes panel-fade {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-floaty,
+  .animate-panel {
+    animation: none;
   }
 }
 

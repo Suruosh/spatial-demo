@@ -12,8 +12,8 @@ interface TourControllerProps {
 }
 
 // Drives the Theatre.js sheet playhead when auto-play is requested. Lives outside
-// the R3F Canvas — it controls the sheet; the @theatre/r3f
-// <PerspectiveCamera theatreKey="Camera"> in the scene applies the authored pose.
+// the R3F Canvas — it controls the sheet; <TheatreCamera> in the scene reads the
+// playhead and applies the resulting pose to the camera.
 export function TourController({ autoPlay = false }: TourControllerProps) {
   useEffect(() => {
     if (!autoPlay) return;

@@ -1,55 +1,62 @@
 import { ExperienceState } from './states';
-import { TOUR_LENGTH } from '../../features/tour/tourStops';
+import { JOURNEY_STOPS, STOP_PROGRESS, TOUR_LENGTH } from '../../features/tour/tourStops';
 
-// Maps normalized scroll progress (0→1) to both an experience state and a
-// position on the single Theatre.js timeline. This is the contract the scroll
-// journey scrubs through: GSAP/Lenis read scroll → progress; Theatre maps
-// progress → sequence.position → camera; React derives the state bucket.
-//
-// Only the cinematic spine (Landing → GuidedTour) is scroll-driven. Explore,
-// ProductFocus, and Cart are entered explicitly, not by scrolling.
-
-export interface JourneySegment {
-  state: ExperienceState;
-  progressStart: number;
-  progressEnd: number;
-  seqStart: number;
-  seqEnd: number;
-}
-
-const JOURNEY_STATES: ExperienceState[] = [
-  ExperienceState.Landing,
-  ExperienceState.Descent,
-  ExperienceState.ExteriorOrbit,
-  ExperienceState.UiReveal,
-  ExperienceState.InteriorEntry,
-  ExperienceState.GuidedTour,
-];
-
-// Equal progress slices, mapped linearly onto the Theatre timeline [0, TOUR_LENGTH].
-// (Slices can be re-weighted later without touching consumers.)
-export const JOURNEY_SEGMENTS: JourneySegment[] = JOURNEY_STATES.map((state, i) => {
-  const n = JOURNEY_STATES.length;
-  return {
-    state,
-    progressStart: i / n,
-    progressEnd: (i + 1) / n,
-    seqStart: (i / n) * TOUR_LENGTH,
-    seqEnd: ((i + 1) / n) * TOUR_LENGTH,
-  };
-});
+// Derivations over the journey spine (tourStops.ts). The scroll journey maps
+// Lenis progress(0→1) to a Theatre playhead position + an ExperienceState bucket;
+// Next/Back navigation snaps progress to stop boundaries. Everything is derived
+// from the single ordered stop list — no second source of truth.
 
 const clamp01 = (p: number): number => Math.min(1, Math.max(0, p));
+const EPS = 1e-4;
 
-// The experience state for a given scroll progress (the active segment's state).
-export function stateForProgress(progress: number): ExperienceState {
+// Index of the stop the given progress currently sits in (last stop at-or-before).
+export function currentStopIndex(progress: number): number {
   const p = clamp01(progress);
-  const segment = JOURNEY_SEGMENTS.find((s) => p < s.progressEnd);
-  return (segment ?? JOURNEY_SEGMENTS[JOURNEY_SEGMENTS.length - 1]).state;
+  let idx = 0;
+  for (let i = 0; i < STOP_PROGRESS.length; i++) {
+    if (STOP_PROGRESS[i] <= p + EPS) idx = i;
+    else break;
+  }
+  return idx;
+}
+
+// The experience state for a given scroll progress (the active stop's state).
+export function stateForProgress(progress: number): ExperienceState {
+  return JOURNEY_STOPS[currentStopIndex(progress)].state;
 }
 
 // The Theatre sequence position (seconds) for a given scroll progress.
-// Linear across the whole timeline so the camera scrubs continuously.
+// Linear across the whole timeline so the camera spline scrubs continuously.
 export function sequencePositionForProgress(progress: number): number {
   return clamp01(progress) * TOUR_LENGTH;
+}
+
+// The scroll progress at which a given state first appears (e.g. the Enter button
+// scrolls to UiReveal).
+export function progressForState(state: ExperienceState): number {
+  const i = JOURNEY_STOPS.findIndex((s) => s.state === state);
+  return i >= 0 ? STOP_PROGRESS[i] : 0;
+}
+
+// The scroll progress of a specific stop id (deep-linking / targeted moves).
+export function progressForStop(id: string): number {
+  const i = JOURNEY_STOPS.findIndex((s) => s.id === id);
+  return i >= 0 ? STOP_PROGRESS[i] : 0;
+}
+
+// Next/previous stop progress — Next/Back buttons drive the SAME scroll to these.
+export function nextStopProgress(progress: number): number {
+  const p = clamp01(progress);
+  const next = STOP_PROGRESS.find((sp) => sp > p + EPS);
+  return next ?? STOP_PROGRESS[STOP_PROGRESS.length - 1];
+}
+
+export function prevStopProgress(progress: number): number {
+  const p = clamp01(progress);
+  let prev = STOP_PROGRESS[0];
+  for (const sp of STOP_PROGRESS) {
+    if (sp < p - EPS) prev = sp;
+    else break;
+  }
+  return prev;
 }

@@ -1,6 +1,5 @@
 import { Home, Info, LayoutGrid, Mail, Moon, Sun } from 'lucide-react';
 import { useTheme } from '../../lib/theme/ThemeProvider';
-import { scrollShowroomToTop } from '../../lib/scroll';
 
 // Desktop spatial navigation rail. Feels attached to space, not the browser edge.
 export function Sidebar() {
@@ -11,8 +10,8 @@ export function Sidebar() {
       <div className="flex flex-col items-center">
         <button
           type="button"
-          aria-label="Home"
-          onClick={scrollShowroomToTop}
+          aria-label="Reload — back to start"
+          onClick={() => window.location.reload()}
           className="w-[52px] h-[52px] rounded-full flex items-center justify-center hover:scale-105 active:scale-95 transition-transform bg-transparent"
         >
           <img

@@ -1,5 +1,4 @@
 import { ShoppingBag } from 'lucide-react';
-import { scrollShowroomToTop } from '../../lib/scroll';
 
 // Floating top chrome: brand logo (center) and cart access (right).
 // Constrained to the same max-w-7xl container as the sidebar/panel row so the
@@ -13,8 +12,8 @@ export function TopBar() {
         <div className="flex-1 flex justify-center">
           <button
             type="button"
-            aria-label="Scroll to top"
-            onClick={scrollShowroomToTop}
+            aria-label="Reload — back to start"
+            onClick={() => window.location.reload()}
             className="pointer-events-auto cursor-pointer flex items-center justify-center hover:scale-105 active:scale-95 transition-all text-2xl tracking-tight text-gray-800 hover:text-black dark:text-white/80 dark:hover:text-white mb-1"
           >
             <span className="font-bold">Spatial</span>

@@ -19,8 +19,9 @@ export function useLenis(
     const instance = new Lenis({
       wrapper,
       content,
-      lerp: 0.09,
+      lerp: 0.08, // a touch smoother glide
       smoothWheel: true,
+      syncTouch: true, // smooth, momentum-matched touch on mobile
     });
     setLenis(instance);
 
