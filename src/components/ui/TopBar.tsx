@@ -1,9 +1,11 @@
 import { ShoppingBag } from 'lucide-react';
+import { useCart, useCommerceNav } from '../../features/commerce';
 
 // Floating top chrome: brand logo (center) and cart access (right).
-// Constrained to the same max-w-7xl container as the sidebar/panel row so the
-// bag aligns with the content panel's right edge — not the raw page edge.
 export function TopBar() {
+  const { itemCount } = useCart();
+  const { openCart } = useCommerceNav();
+
   return (
     <div className="absolute top-6 lg:top-12 left-0 right-0 z-50 pointer-events-none">
       <div className="w-full max-w-7xl mx-auto px-4 lg:px-12 flex justify-between items-center">
@@ -25,9 +27,15 @@ export function TopBar() {
           <button
             type="button"
             aria-label="Shopping Bag"
-            className="w-12 h-12 lg:w-14 lg:h-14 rounded-full flex items-center justify-center text-gray-800 hover:text-black hover:bg-black/5 dark:text-white/70 dark:hover:text-white dark:hover:bg-white/10 transition-all pointer-events-auto"
+            onClick={openCart}
+            className="relative w-12 h-12 lg:w-14 lg:h-14 rounded-full flex items-center justify-center text-gray-800 hover:text-black hover:bg-black/5 dark:text-white/70 dark:hover:text-white dark:hover:bg-white/10 transition-all pointer-events-auto"
           >
             <ShoppingBag className="w-6 h-6" />
+            {itemCount > 0 && (
+              <span className="absolute -top-0.5 -right-0.5 min-w-5 h-5 px-1 rounded-full bg-white text-gray-900 text-[10px] font-bold flex items-center justify-center shadow-md dark:bg-white/90">
+                {itemCount > 9 ? '9+' : itemCount}
+              </span>
+            )}
           </button>
         </div>
       </div>
