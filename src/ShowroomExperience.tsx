@@ -39,12 +39,15 @@ export function ShowroomExperience() {
   const parallax = usePointerParallax(!isMobile);
   const controlsRef = useRef<CameraControlsImpl | null>(null);
 
-  // Lenis drives real page-scroll on the content layer (the panel moves with the
-  // scroll). It works even though the layer is pointer-events-none: wheel/touch
-  // over the panel bubbles to the wrapper → Lenis scrolls; wheel over the empty
-  // 3D area targets the canvas → CameraControls zooms. No internal panel scroll.
+  // Scroll model (page scroll, never internal):
+  //  - Desktop: the overlay is pointer-events-none (3D orbit stays live); Lenis
+  //    drives smooth wheel-scroll (wheel over the panel bubbles to the wrapper →
+  //    Lenis scrolls; wheel over the 3D → CameraControls zooms).
+  //  - Mobile: the overlay is pointer-events-auto and scrolls NATIVELY (reliable
+  //    swipe-to-scroll); the 3D is view-only there (navigated by buttons). Lenis
+  //    is disabled so it doesn't fight native touch scroll.
   const contentRef = useRef<HTMLDivElement>(null);
-  useLenis(parallax.targetRef, contentRef);
+  useLenis(parallax.targetRef, contentRef, !isMobile);
 
   const [stopIndex, setStopIndex] = useState(0);
   const [revealed, setRevealed] = useState(false);
@@ -122,23 +125,29 @@ export function ShowroomExperience() {
           <MobileBar />
         </div>
 
-        {/* Spatial UI overlay — pointer-events-none so drags/zoom/taps pass through
-            to the 3D (orbit/zoom/pan + item click stay live). Lenis drives real
-            page-scroll here (the panel moves with the scroll); see useLenis above. */}
+        {/* Spatial UI overlay — pointer-events-none so the 3D stays interactive.
+            Split-by-area on mobile: orbit/tap in the upper region; the panel lives
+            in a lower native-scroll zone. Desktop: Lenis drives wheel-scroll. */}
         <div
           ref={parallax.targetRef}
-          className={`absolute inset-0 z-10 overflow-y-auto no-scrollbar pointer-events-none ${revealClass(revealed)}`}
+          className={`absolute inset-0 z-10 overflow-hidden lg:overflow-y-auto no-scrollbar pointer-events-none ${revealClass(revealed)}`}
           style={{ transformStyle: 'preserve-3d' }}
         >
-          <div ref={contentRef} className="min-h-full w-full flex flex-col">
-            <TopBar />
-            {/* 3D occupies the upper area on mobile; the panel sits below with
-                bottom room so the fixed MobileBar never covers it. */}
-            <div className="flex-1 w-full max-w-7xl mx-auto px-4 lg:p-12 flex flex-col lg:flex-row justify-between lg:items-center pt-[65vh] pb-[120px] lg:pt-0 lg:pb-0 pointer-events-none">
-              <Sidebar />
+          <TopBar />
+          {isMobile ? (
+            // Mobile: lower scroll zone (native swipe-scroll); the 3D orbits/taps
+            // in the upper area above it. The panel's top edge fades into the scene.
+            <div className="pointer-events-auto absolute inset-x-0 bottom-0 h-[56dvh] overflow-y-auto no-scrollbar px-4 pt-10 pb-28 flex items-start [mask-image:linear-gradient(to_bottom,transparent_0,#000_16%,#000_94%,transparent_100%)] [-webkit-mask-image:linear-gradient(to_bottom,transparent_0,#000_16%,#000_94%,transparent_100%)]">
               <ContentPanel />
             </div>
-          </div>
+          ) : (
+            <div ref={contentRef} className="min-h-full w-full flex flex-col">
+              <div className="flex-1 w-full max-w-7xl mx-auto p-12 flex flex-row justify-between items-center pointer-events-none">
+                <Sidebar />
+                <ContentPanel />
+              </div>
+            </div>
+          )}
         </div>
 
         {/* Pre-landing — cinematic first screen (Pillar 1). Fades out on Enter.

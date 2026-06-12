@@ -8,13 +8,15 @@ import Lenis from 'lenis';
 export function useLenis(
   wrapperRef: RefObject<HTMLElement | null>,
   contentRef: RefObject<HTMLElement | null>,
+  enabled = true,
 ): Lenis | null {
   const [lenis, setLenis] = useState<Lenis | null>(null);
 
   useEffect(() => {
     const wrapper = wrapperRef.current;
     const content = contentRef.current;
-    if (!wrapper || !content) return;
+    // When disabled (e.g. mobile), the layer uses native scroll instead.
+    if (!wrapper || !content || !enabled) return;
 
     const instance = new Lenis({
       wrapper,
@@ -37,7 +39,7 @@ export function useLenis(
       instance.destroy();
       setLenis(null);
     };
-  }, [wrapperRef, contentRef]);
+  }, [wrapperRef, contentRef, enabled]);
 
   return lenis;
 }
