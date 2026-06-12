@@ -1,8 +1,10 @@
 import { Suspense, useEffect, type RefObject } from 'react';
 import { Canvas, type ThreeEvent } from '@react-three/fiber';
 import { Center, ContactShadows, CameraControls } from '@react-three/drei';
+import { XR, XROrigin, useXR } from '@react-three/xr';
 import type CameraControlsImpl from 'camera-controls';
 import * as THREE from 'three';
+import { xrStore } from '../lib/xr';
 import { ShowroomModel } from '../features/showroom/ShowroomModel';
 import { ShowroomEnvironment } from '../features/showroom/ShowroomEnvironment';
 import { ShowroomAtmosphere } from '../features/showroom/ShowroomAtmosphere';
@@ -24,6 +26,9 @@ interface ShowroomSceneProps {
 // (setLookAt) by the UI buttons. Scroll over the canvas dollies; it does NOT drive
 // a journey (that lives on the UI now).
 function ControlledCamera({ controlsRef }: { controlsRef: RefObject<CameraControlsImpl | null> }) {
+  // In an XR session the headset drives the view — stand the desktop camera down.
+  const inSession = useXR((state) => state.session != null);
+
   useEffect(() => {
     const controls = controlsRef.current;
     if (!controls) return;
@@ -51,6 +56,8 @@ function ControlledCamera({ controlsRef }: { controlsRef: RefObject<CameraContro
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
   }, [controlsRef]);
+
+  if (inSession) return null;
 
   return (
     <CameraControls
@@ -124,7 +131,11 @@ export function ShowroomScene({ isDark, controlsRef, onSelectProduct }: Showroom
       // frames — before scene.background is set — aren't a black blink.
       onCreated={({ gl }) => gl.setClearColor(0x15151b, 1)}
     >
-      <SceneContents isDark={isDark} controlsRef={controlsRef} onSelectProduct={onSelectProduct} />
+      <XR store={xrStore}>
+        {/* Where the player stands in VR (approx; tune to the model). */}
+        <XROrigin position={[0, -1.5, 2.4]} />
+        <SceneContents isDark={isDark} controlsRef={controlsRef} onSelectProduct={onSelectProduct} />
+      </XR>
     </Canvas>
   );
 }

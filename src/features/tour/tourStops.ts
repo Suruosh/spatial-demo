@@ -30,7 +30,7 @@ export const JOURNEY_STOPS: JourneyStop[] = [
   { id: 'exterior-approach', state: ExperienceState.ExteriorOrbit, camera: [5, 1.9, 5.5], lookAt: [0, 0.5, 0], label: 'Exterior — approach' },
   { id: 'exterior-sweep', state: ExperienceState.ExteriorOrbit, camera: [-4.5, 1.9, 5], lookAt: [0, 0.5, 0], label: 'Exterior — sweep' },
   // UI Reveal — calm front framing; the spatial UI activates here.
-  { id: 'ui-reveal', state: ExperienceState.UiReveal, camera: [0, 1.4, 5.5], lookAt: [0, 0.6, 0], label: 'UI Reveal' },
+  { id: 'ui-reveal', state: ExperienceState.UiReveal, camera: [-0.08, 1.21, 5.4], lookAt: [-0.08, -0.74, 0.2], label: 'UI Reveal' },
   // Interior Entry — approach the entrance, then move through it.
   { id: 'entrance-approach', state: ExperienceState.InteriorEntry, camera: [-1.18, -0.5, 1.95], lookAt: [-0.51, -0.67, 0.08], label: 'Interior — approach' },
   { id: 'entrance-through', state: ExperienceState.InteriorEntry, camera: [0.92, -0.57, 0.56], lookAt: [-0.51, -0.75, -1.55], label: 'Interior — entry' },
