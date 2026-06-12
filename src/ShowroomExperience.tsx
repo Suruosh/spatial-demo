@@ -135,9 +135,12 @@ export function ShowroomExperience() {
         >
           <TopBar />
           {isMobile ? (
-            // Mobile: lower scroll zone (native swipe-scroll); the 3D orbits/taps
-            // in the upper area above it. The panel's top edge fades into the scene.
-            <div className="pointer-events-auto absolute inset-x-0 bottom-0 h-[56dvh] overflow-y-auto no-scrollbar px-4 pt-10 pb-28 flex items-start [mask-image:linear-gradient(to_bottom,transparent_0,#000_16%,#000_94%,transparent_100%)] [-webkit-mask-image:linear-gradient(to_bottom,transparent_0,#000_16%,#000_94%,transparent_100%)]">
+            // Mobile: lower native-scroll zone (3D orbits/taps in the upper area).
+            // pt pushes the panel low (its lower part tucked behind the MobileBar);
+            // pb gives room to swipe it up until the bottom buttons clear the bar.
+            <div
+              className="pointer-events-auto absolute inset-x-0 bottom-0 top-[40dvh] overflow-y-auto no-scrollbar px-4 pt-[34dvh] pb-44 flex items-start [touch-action:pan-y] [mask-image:linear-gradient(to_bottom,transparent_0,#000_22%,#000_90%,transparent_100%)] [-webkit-mask-image:linear-gradient(to_bottom,transparent_0,#000_22%,#000_90%,transparent_100%)]"
+            >
               <ContentPanel />
             </div>
           ) : (
